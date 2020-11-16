@@ -32,6 +32,15 @@ export default new Router({
       name: "pantryItems",
       component: () =>
         import(/* webpackChunkName: "pantryItems" */ "../views/PantryItems.vue")
+    },
+    {
+      // beforeEnter: AuthGuard,
+      path: "/pantryItemsStock",
+      name: "pantryItemsStock",
+      component: () =>
+        import(
+          /* webpackChunkName: "pantryItemsStock" */ "../views/PantryItemsStock.vue"
+        )
     }
   ]
 });

@@ -43,6 +43,14 @@
             <v-list-item-title>Pantry Food List</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item :to="'/pantryItemsStock'">
+          <v-list-item-action>
+            <v-icon>mdi-package-variant-closed</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Pantry Stock</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
       <template v-if="$vuetify.breakpoint.lgAndUp" v-slot:append>
         <div class="pl-3 mb-4">
