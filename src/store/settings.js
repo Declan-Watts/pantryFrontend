@@ -3,7 +3,7 @@ import api from "@/api.js";
 export default {
   state: {
     siteData: {},
-    fullLoading: false,
+    fullLoader: false,
     navigationDrawer: true,
     aGGridActionMenu: false,
     selectedRowData: {}
@@ -23,6 +23,9 @@ export default {
     },
     setSelectedRowData(state, rowData) {
       state.selectedRowData = rowData;
+    },
+    setFullLoader(state, loading) {
+      state.fullLoader = loading;
     }
   },
   actions: {
@@ -40,6 +43,9 @@ export default {
     },
     async setSelectedRowData({ commit }, payload) {
       commit("setSelectedRowData", payload);
+    },
+    async setFullLoaderState({ commit }, loading) {
+      commit("setFullLoader", loading);
     }
   },
   getters: {

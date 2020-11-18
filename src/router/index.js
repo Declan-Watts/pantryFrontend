@@ -14,27 +14,28 @@ export default new Router({
         import(/* webpackChunkName: "login" */ "../views/Login.vue")
     },
     {
-      // beforeEnter: AuthGuard,
+      beforeEnter: AuthGuard,
       path: "/",
-      name: "dasboard",
+      name: "dashboard",
       component: () =>
         import(/* webpackChunkName: "dashboard" */ "../views/Dashboard.vue")
     },
     {
+      beforeEnter: AuthGuard,
       path: "/categories",
       name: "categories",
       component: () =>
         import(/* webpackChunkName: "categories" */ "../views/Categories.vue")
     },
     {
-      // beforeEnter: AuthGuard,
+      beforeEnter: AuthGuard,
       path: "/pantryItems",
       name: "pantryItems",
       component: () =>
         import(/* webpackChunkName: "pantryItems" */ "../views/PantryItems.vue")
     },
     {
-      // beforeEnter: AuthGuard,
+      beforeEnter: AuthGuard,
       path: "/pantryItemsStock",
       name: "pantryItemsStock",
       component: () =>

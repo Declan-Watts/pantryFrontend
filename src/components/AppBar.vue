@@ -92,7 +92,7 @@
             v-on="on"
             class="pa-0"
           >
-            <avatar
+            <!-- <avatar
               :size="35"
               color="white"
               :username="
@@ -100,7 +100,7 @@
                   ? currentUser.email
                   : currentUser.displayName
               "
-            ></avatar>
+            ></avatar> -->
           </v-btn>
         </template>
 
@@ -108,7 +108,7 @@
           <v-list>
             <v-list-item>
               <v-list-item-avatar>
-                <avatar
+                <!-- <avatar
                   :size="35"
                   color="white"
                   :username="
@@ -116,7 +116,7 @@
                       ? currentUser.email
                       : currentUser.displayName
                   "
-                ></avatar>
+                ></avatar> -->
               </v-list-item-avatar>
 
               <v-list-item-content>
@@ -134,20 +134,10 @@
 
           <v-list>
             <v-list-item>
-              <v-list-item-subtitle v-if="linkedToGoogle" class="black--text"
-                >Linked to Google account</v-list-item-subtitle
-              >
-            </v-list-item>
-            <v-list-item v-if="!linkedToGoogle">
               <v-btn @click="resetPassword" color="red" block
                 >Reset Password</v-btn
               >
             </v-list-item>
-
-            <v-list-item v-if="!linkedToGoogle">
-              <v-btn block>Link To Google</v-btn>
-            </v-list-item>
-
             <v-list-item>
               <v-btn
                 block
@@ -200,11 +190,6 @@
         this.drawer = this.navigationDrawer;
       }
       if (this.currentUser) {
-        this.currentUser.providerData.forEach((element) => {
-          if (element.providerId == "google.com") {
-            this.linkedToGoogle = true;
-          }
-        });
       }
     },
     methods: {

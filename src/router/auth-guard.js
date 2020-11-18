@@ -3,23 +3,23 @@ import { auth } from "@/firebase.js";
 
 export default (to, from, next) => {
   let user = JSON.parse(window.localStorage.currentUser);
-  let userData = JSON.parse(window.localStorage.currentUserData);
   let toPage = {};
   if (typeof window.localStorage.toPage != "undefined") {
     toPage = JSON.parse(window.localStorage.toPage);
   }
-  if (user && userData.Result == "Success") {
-    if (typeof toPage.fullPath != "undefined" && toPage.fullPath != "/") {
+  console.log(user);
+  if (typeof user != "undefined" && user.message == "success") {
+    if (typeof toPage.fullPath != "undefined" && toPage.fullPath != "/login") {
       localStorage.setItem("toPage", JSON.stringify({}));
       next(toPage.fullPath);
-    } else if (to.fullPath == "/") {
-      next("/dashboard");
+    } else if (to.fullPath == "/login") {
+      next("/");
     } else {
       next();
     }
   } else {
     localStorage.setItem("toPage", JSON.stringify(to));
-    next("/");
+    next("/login");
   }
   document.querySelector("html").scrollTop = 0;
 };

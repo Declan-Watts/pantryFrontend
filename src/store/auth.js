@@ -11,9 +11,11 @@ export default {
   mutations: {
     setCurrentUser(state, user) {
       state.currentUser = user;
+      window.localStorage.setItem("currentUser", JSON.stringify(user));
     },
     setCurrentUserData(state, user) {
       state.currentUserData = user;
+      window.localStorage.setItem("currentUser", JSON.stringify(user));
     },
     setSiteFirstLoad(state, payload) {
       state.siteFirstLoad = payload;
@@ -21,16 +23,15 @@ export default {
   },
   actions: {
     initAuth({ commit, dispatch }) {
-      auth.onAuthStateChanged(user => {
-        if (user !== null) {
-          api.defaults.headers.Authorization = `Bearer ${user._lat}`;
-          localStorage.setItem("currentUser", JSON.stringify(user));
-          commit("setCurrentUser", user);
-          dispatch("loadCurrentUserData");
-        } else {
-          // dispatch("setFullLoaderState", false);
-        }
-      });
+      let user = JSON.parse(window.localStorage.currentUser);
+      if (typeof user != "undefined" && user.message == "success") {
+        commit("setCurrentUser", user);
+      } else {
+        commit("setCurrentUser", {});
+      }
+      setTimeout(() => {
+        commit("setFullLoader", false);
+      }, 500);
     },
     login({ commit, dispatch, state }, payload) {
       commit("setSiteFirstLoad", false);
@@ -43,14 +44,6 @@ export default {
         .catch(err => {
           return err;
         });
-    },
-    loginWithGoogle({ commit, dispatch, state }) {
-      commit("setSiteFirstLoad", false);
-      return auth.signInWithPopup(GoogleProvider).then(async result => {
-        commit("setCurrentUser", result.user);
-        // dispatch("loadCurrentUserDataGoogleSignIn", result.user);
-        // router.push("dashboard");
-      });
     },
     registerUser({ commit, dispatch }, payload) {
       return auth
@@ -86,26 +79,6 @@ export default {
         // dispatch("setFullLoaderState", false);
       }, 500);
     },
-    // async loadCurrentUserDataGoogleSignIn({ commit, rootState }, user) {
-    //   let userData = await api.get("user/CurrentUserData", {
-    //     params: { appID: rootState.settings.appID },
-    //   });
-    //   localStorage.setItem("currentUserData", JSON.stringify(userData.data));
-    //   commit("setCurrentUserData", userData.data);
-    //   if (userData.data.Result == "Denied") {
-    //     router.replace("/");
-    //   }
-    //   setTimeout(function() {
-    //     dispatch("setFullLoaderState", false);
-    //   }, 500);
-    //   // let userData = await api.get("user/CurrentUserDataGoogle", user);
-    //   // commit("setCurrentUserData", userData.data);
-    //   // if (userData.data == "Denied") {
-    //   //   router.push("/ownerships");
-    //   // } else if (router.currentRoute.name === "login") {
-    //   //   // router.push("/dashboard");
-    //   // }
-    // },
     logout({ commit }) {
       auth.signOut().then(() => {
         localStorage.setItem("currentUser", JSON.stringify({}));

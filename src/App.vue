@@ -2,15 +2,17 @@
   <v-app id="default">
     <!-- style="background-color:#edffea"-->
     <v-content>
-      <!-- <v-fade-transition>
-        <div v-if="fullLoading" class="loaderOverlay">
+      <v-fade-transition>
+        <div v-if="fullLoader" class="loaderOverlay">
           <div class="lds-ripple">
             <div></div>
             <div></div>
           </div>
         </div>
-      </v-fade-transition> -->
-      <app-bar v-if="$route.path != '/login'" />
+      </v-fade-transition>
+      <app-bar
+        v-if="$route.path != '/login' && currentUser.message == 'success'"
+      />
       <router-view />
     </v-content>
   </v-app>
@@ -26,7 +28,7 @@
       AppBar,
     },
     computed: {
-      ...mapGetters(["currentUser", "currentUserData"]),
+      ...mapGetters(["currentUser", "currentUserData", "fullLoader"]),
     },
     data: () => ({
       bottomBarVisible: true,
@@ -34,30 +36,29 @@
       drawerRoutes: {},
     }),
     watch: {
-      // currentUserData: function (oldData, newData) {
-      //   if (
-      //     this.currentUserData.Result == "Success" &&
-      //     this.$route.path === "/"
-      //   ) {
-      //     this.$router.push("/dashboard");
-      //   } else if (
-      //     this.currentUserData.Result != "Success" &&
-      //     this.$route.path != "/"
-      //   ) {
-      //     this.$router.push("/");
-      //   }
-      // },
+      currentUser: function (oldData, newData) {
+        this.checkUserAuth();
+      },
     },
     mounted() {
-      // if (this.currentUserData.Result == "Success" && this.$route.path === "/") {
-      //   this.$router.push("/dashboard");
-      // } else if (
-      //   this.currentUserData.Result != "Success" &&
-      //   this.$route.path != "/"
-      // ) {
-      //   this.$router.push("/");
-      // }
-      // this.bottomNav = this.$route.name;
+      console.log(this.fullLoader);
+      this.checkUserAuth();
+      this.bottomNav = this.$route.name;
+    },
+    methods: {
+      checkUserAuth() {
+        if (
+          this.currentUser.message == "success" &&
+          this.$route.path === "/login"
+        ) {
+          this.$router.push("/");
+        } else if (
+          this.currentUser.message != "success" &&
+          this.$route.path != "/login"
+        ) {
+          this.$router.push("/login");
+        }
+      },
     },
   };
 </script>

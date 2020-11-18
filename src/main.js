@@ -48,11 +48,8 @@ new Vue({
     ]
   },
   beforeCreate() {
-    // this.$store.dispatch("setFullLoaderState", false);
-    // this.$store.dispatch("setFullLoaderState", true);
-    // this.$store.dispatch("loadSiteData").then(() => {
-    //     this.$store.dispatch("initAuth");
-    // });
+    this.$store.dispatch("setFullLoaderState", true);
+    this.$store.dispatch("initAuth");
   },
   render: h => h(App)
 }).$mount("#app");
