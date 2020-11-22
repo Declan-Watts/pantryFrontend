@@ -7,8 +7,7 @@ export default (to, from, next) => {
   if (typeof window.localStorage.toPage != "undefined") {
     toPage = JSON.parse(window.localStorage.toPage);
   }
-  console.log(user);
-  if (typeof user != "undefined" && user.message == "success") {
+  if (typeof user != "undefined" && user.message == "Success") {
     if (typeof toPage.fullPath != "undefined" && toPage.fullPath != "/login") {
       localStorage.setItem("toPage", JSON.stringify({}));
       next(toPage.fullPath);

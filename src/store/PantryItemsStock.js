@@ -17,7 +17,6 @@ export default {
     async loadPantryItemsStock({ commit }) {
       commit("setPantryItemsStockLoading", true);
       let pantryItemsStock = await api.get("PantryItems_Stock");
-      console.log(pantryItemsStock);
       commit("setPantryItemsStock", pantryItemsStock.data);
       commit("setPantryItemsStockLoading", true);
     },

@@ -17,7 +17,6 @@ export default {
     async loadCategories({ commit }) {
       commit("setCategoriesLoading", true);
       let categories = await api.get("Categories");
-      console.log(categories);
       commit("setCategories", categories.data);
       commit("setCategoriesLoading", true);
     },

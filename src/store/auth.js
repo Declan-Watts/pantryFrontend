@@ -24,7 +24,7 @@ export default {
   actions: {
     initAuth({ commit, dispatch }) {
       let user = JSON.parse(window.localStorage.currentUser);
-      if (typeof user != "undefined" && user.message == "success") {
+      if (typeof user != "undefined" && user.message == "Success") {
         commit("setCurrentUser", user);
       } else {
         commit("setCurrentUser", {});
@@ -33,17 +33,25 @@ export default {
         commit("setFullLoader", false);
       }, 500);
     },
-    login({ commit, dispatch, state }, payload) {
+    async login({ commit, dispatch, state }, payload) {
       commit("setSiteFirstLoad", false);
-      return auth
-        .signInWithEmailAndPassword(payload.email, payload.password)
-        .then(result => {
-          localStorage.setItem("currentUser", JSON.stringify(result.user));
-          commit("setCurrentUser", result.user);
+      let returnData = {};
+      await api
+        .post("auth/login", payload)
+        .then(response => {
+          console.log(response);
+          if (response.data.message == "Success") {
+            commit("setCurrentUser", response.data);
+          }
+          returnData = response.data;
         })
         .catch(err => {
-          return err;
+          console.log(err);
+          returnData = {
+            message: "error"
+          };
         });
+      return returnData;
     },
     registerUser({ commit, dispatch }, payload) {
       return auth
@@ -80,28 +88,13 @@ export default {
       }, 500);
     },
     logout({ commit }) {
-      auth.signOut().then(() => {
-        localStorage.setItem("currentUser", JSON.stringify({}));
-        localStorage.setItem("currentUserData", JSON.stringify({}));
-        commit("setCurrentUser", {});
-        commit("setCurrentUserData", {});
-      });
+      localStorage.setItem("currentUser", JSON.stringify({}));
+      localStorage.setItem("currentUserData", JSON.stringify({}));
+      commit("setCurrentUser", {});
+      commit("setCurrentUserData", {});
     },
     async passwordReset({ commit }, email) {
       api.post("users/passwordReset", { email: email });
-    },
-    async linkAccountToGoogle({ commit }) {
-      let returnData;
-      await auth.currentUser
-        .linkWithPopup(GoogleProvider)
-        .then(function(result) {
-          returnData = "Success";
-        })
-        .catch(function(error) {
-          console.log(error);
-          returnData = error;
-        });
-      return returnData;
     }
   },
   getters: {

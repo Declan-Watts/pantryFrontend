@@ -412,7 +412,6 @@
         },
       ];
       this.$store.dispatch("loadPantryItemsStock", false).then(() => {
-        console.log(this.pantryItemsStock);
         this.setGridData();
       });
 

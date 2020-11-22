@@ -76,6 +76,7 @@
         >{{ siteData.name }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn @click="$store.dispatch('logout')">Logout</v-btn>
       <v-menu
         v-if="currentUser"
         v-model="userMenu"
@@ -198,7 +199,6 @@
         this.drawer = !this.drawer;
       },
       resetPassword() {
-        console.log(this.currentUser);
         this.$store.dispatch("passwordReset", this.currentUser.email);
         this.$swal({
           title: "Check your inbox",

@@ -11,7 +11,7 @@
         </div>
       </v-fade-transition>
       <app-bar
-        v-if="$route.path != '/login' && currentUser.message == 'success'"
+        v-if="$route.path != '/login' && currentUser.message == 'Success'"
       />
       <router-view />
     </v-content>
@@ -41,19 +41,18 @@
       },
     },
     mounted() {
-      console.log(this.fullLoader);
       this.checkUserAuth();
       this.bottomNav = this.$route.name;
     },
     methods: {
       checkUserAuth() {
         if (
-          this.currentUser.message == "success" &&
+          this.currentUser.message == "Success" &&
           this.$route.path === "/login"
         ) {
           this.$router.push("/");
         } else if (
-          this.currentUser.message != "success" &&
+          this.currentUser.message != "Success" &&
           this.$route.path != "/login"
         ) {
           this.$router.push("/login");

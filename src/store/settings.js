@@ -31,7 +31,6 @@ export default {
   actions: {
     async loadSiteData({ commit }) {
       let siteData = await api.get("PantryItems");
-      console.log(siteData);
       commit("setSiteData", siteData.data);
     },
     async setNavigationDrawerState({ commit }, payload) {

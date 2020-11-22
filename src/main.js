@@ -13,8 +13,9 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 import VueStripeCheckout from "vue-stripe-checkout";
-localStorage.setItem("currentUser", JSON.stringify({}));
-localStorage.setItem("currentUserData", JSON.stringify({}));
+if (!window.localStorage.hasOwnProperty("currentUser")) {
+  window.localStorage.setItem("currentUser", JSON.stringify({}));
+}
 
 Vue.use(Vuetify);
 
