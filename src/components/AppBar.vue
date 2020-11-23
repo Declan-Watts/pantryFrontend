@@ -10,6 +10,41 @@
       :clipped="clipped"
       v-if="currentUserData"
     >
+      <v-list>
+        <v-list-item class="px-2">
+          <v-list-item-avatar>
+            <avatar
+              :size="35"
+              color="white"
+              :username="currentUser.details.userName"
+            ></avatar>
+          </v-list-item-avatar>
+        </v-list-item>
+
+        <v-list-item :to="'/userProfile'">
+          <v-list-item-content>
+            <v-list-item-title class="title">
+              {{ currentUser.details.userName }}
+            </v-list-item-title>
+            <v-list-item-subtitle>{{
+              currentUser.details.email
+            }}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-btn
+            text
+            style="margin: auto"
+            color="red"
+            v-if="currentUser"
+            @click="$store.dispatch('logout')"
+          >
+            <v-icon left>mdi-lock-open</v-icon> Logout
+          </v-btn>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
       <v-list dense>
         <!-- <v-list-item :to="'/'">
           <v-list-item-action>
@@ -76,7 +111,6 @@
         >{{ siteData.name }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="$store.dispatch('logout')">Logout</v-btn>
       <v-menu
         v-if="currentUser"
         v-model="userMenu"
@@ -93,15 +127,6 @@
             v-on="on"
             class="pa-0"
           >
-            <!-- <avatar
-              :size="35"
-              color="white"
-              :username="
-                currentUser.displayName == null
-                  ? currentUser.email
-                  : currentUser.displayName
-              "
-            ></avatar> -->
           </v-btn>
         </template>
 
@@ -139,15 +164,7 @@
                 >Reset Password</v-btn
               >
             </v-list-item>
-            <v-list-item>
-              <v-btn
-                block
-                v-if="currentUser"
-                @click="$store.dispatch('logout')"
-              >
-                <v-icon left>mdi-lock-open</v-icon> Logout
-              </v-btn>
-            </v-list-item>
+            <v-list-item> </v-list-item>
           </v-list>
         </v-card>
       </v-menu>
@@ -175,7 +192,7 @@
       fav: false,
       drawer: false,
       clipped: true,
-      miniNav: true,
+      miniNav: false,
       drawerRoutes: {},
       linkedToGoogle: false,
     }),

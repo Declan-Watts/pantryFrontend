@@ -12,6 +12,7 @@
               <v-toolbar-title>Welcome to Pantry</v-toolbar-title>
             </v-toolbar>
             <v-card-text>
+              <!-- Login -->
               <v-form v-if="!register">
                 <v-text-field
                   label="Username"
@@ -38,29 +39,49 @@
                   :type="hidePassword ? 'password' : 'text'"
                 ></v-text-field>
               </v-form>
-              <v-form v-if="register">
+              <!-- Register -->
+              <v-form ref="registerForm" v-if="register">
                 <v-text-field
-                  label="Full Name"
-                  :rules="[(v) => !!v || 'Name is required']"
-                  name="login"
+                  label="Username*"
+                  :rules="[
+                    (v) => !!v || 'Username is required',
+                    (v) =>
+                      !v.includes(' ') || 'Username Cannot contain a Space',
+                  ]"
+                  name="register"
                   prepend-icon="mdi-account"
                   type="text"
-                  v-model="registerData.fullName"
+                  v-model="registerData.username"
                   required
                 ></v-text-field>
                 <v-text-field
-                  label="Email"
+                  label="Email*"
                   :rules="emailRules"
-                  name="login"
+                  name="register"
                   prepend-icon="mdi-email"
                   type="text"
                   v-model="registerData.email"
                   required
                 ></v-text-field>
                 <v-text-field
+                  label="Phone Number"
+                  name="register"
+                  prepend-icon="mdi-phone"
+                  type="text"
+                  v-model="registerData.phone"
+                ></v-text-field>
+                <v-text-field
                   id="password"
-                  :rules="[(v) => !!v || 'Password is required']"
-                  label="Password"
+                  :rules="[
+                    (value) => {
+                      const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+                      return (
+                        pattern.test(value) ||
+                        'Min. 8 characters with at least one capital letter, a number and a special character.'
+                      );
+                    },
+                  ]"
+                  label="Password*"
                   name="password"
                   prepend-icon="mdi-lock"
                   type="password"
@@ -76,7 +97,7 @@
                     (v) =>
                       v === registerData.password || 'Passwords Need to Match',
                   ]"
-                  label="Confirm Password"
+                  label="Confirm Password*"
                   name="passwordConfirm"
                   prepend-icon="mdi-lock"
                   type="password"
@@ -223,28 +244,26 @@
         this.forgotPasswordDialog = false;
       },
       registerUser() {
-        if (this.registerPassword === this.confirmPassword) {
-          this.registerLoading = true;
-          let _this = this;
-          this.$store
-            .dispatch("registerUser", {
-              email: this.email,
-              password: this.confirmPassword,
-              name: this.fullName,
-              isBusiness: this.isBusiness,
-              businessName: this.businessName,
-            })
-            .then((result) => {
-              if (typeof result != "undefined") {
+        if (this.$refs.registerForm.validate()) {
+          if (this.registerPassword === this.confirmPassword) {
+            this.registerLoading = true;
+            let _this = this;
+            let payload = {
+              username: this.registerData.username,
+              email: this.registerData.email,
+              phoneNumber: this.registerData.phone,
+              password: this.registerData.password,
+            };
+            this.$store.dispatch("registerUser", payload).then((result) => {
+              if (result.message == "Failed") {
                 this.$swal({
-                  title: "Sorry",
-                  text: "Email is Already in Use",
-                  type: "warning",
-                  confirmButtonText: "Ok",
+                  title: "Registration Failed",
+                  text: result.error["InvalidUserName"].errors[0].errorMessage,
                 });
               }
               this.registerLoading = false;
             });
+          }
         }
       },
     },

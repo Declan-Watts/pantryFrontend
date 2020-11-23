@@ -25,6 +25,7 @@ export default {
     initAuth({ commit, dispatch }) {
       let user = JSON.parse(window.localStorage.currentUser);
       if (typeof user != "undefined" && user.message == "Success") {
+        api.defaults.headers.Authorization = `Bearer ${user.token}`;
         commit("setCurrentUser", user);
       } else {
         commit("setCurrentUser", {});
@@ -42,6 +43,7 @@ export default {
           console.log(response);
           if (response.data.message == "Success") {
             commit("setCurrentUser", response.data);
+            api.defaults.headers.Authorization = `Bearer ${user.token}`;
           }
           returnData = response.data;
         })
@@ -53,24 +55,30 @@ export default {
         });
       return returnData;
     },
-    registerUser({ commit, dispatch }, payload) {
-      return auth
-        .createUserWithEmailAndPassword(payload.email, payload.password)
-        .then(result => {
-          commit("setCurrentUser", result.user);
-          delete payload.password;
-          payload.firebase_id = result.user.uid;
-          payload.business_name = payload.businessName;
-          if (payload.isBusiness) {
-            payload.role = ["business"];
+    async registerUser({ commit, dispatch }, payload) {
+      let returnData;
+      await api
+        .post("auth/register", payload)
+        .then(response => {
+          if (response.data.message == "User Reigstration Successful") {
+            dispatch("login", {
+              username: payload.username,
+              password: payload.password
+            });
+          } else {
+            returnData = {
+              message: "Failed",
+              error: response.error
+            };
           }
-          api.post("user", payload).then(data => {
-            dispatch("loadCurrentUserData", result.user.uid);
-          });
         })
         .catch(err => {
-          return err;
+          returnData = {
+            message: "Failed",
+            error: err
+          };
         });
+      return returnData;
     },
     async loadCurrentUserData({ commit, rootState, dispatch }) {
       commit("setCurrentUserData", { Result: "Loading" });
