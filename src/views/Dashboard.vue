@@ -3,14 +3,11 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title>
-            Currently Nothing on the Dashboard, Please use the Navigation Drawer
-          </v-card-title>
-          <p>
-            <pre>
-              {{siteData}}
-            </pre>
-          </p>
+          <v-card-title> Welcome to your Dashboard </v-card-title>
+          <v-card-text class="pb-4">
+            To view your Profile please click on your Name/Email at the top of
+            the Navigation menu to the left
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col cols="12" md="6" lg="3"> </v-col>
