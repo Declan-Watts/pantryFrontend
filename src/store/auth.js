@@ -40,15 +40,13 @@ export default {
       await api
         .post("auth/login", payload)
         .then(response => {
-          console.log(response);
           if (response.data.message == "Success") {
             commit("setCurrentUser", response.data);
-            api.defaults.headers.Authorization = `Bearer ${user.token}`;
+            api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
           }
           returnData = response.data;
         })
         .catch(err => {
-          console.log(err);
           returnData = {
             message: "error"
           };

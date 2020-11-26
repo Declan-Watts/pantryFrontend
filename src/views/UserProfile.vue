@@ -17,9 +17,45 @@
             </v-tooltip>
             <v-spacer></v-spacer>
           </v-toolbar>
+          <v-card-title>
+            Welcome {{ currentUser.details.userName }}
+          </v-card-title>
+          <v-card-subtitle> This is your profile </v-card-subtitle>
           <v-card-text>
-            <v-row> </v-row>
+            <v-row>
+              <v-col xs12 sm6>
+                <v-text-field
+                  label="Email"
+                  :rules="emailRules"
+                  name="register"
+                  prepend-icon="mdi-email"
+                  type="text"
+                  v-model="formData.email"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col xs12 sm6>
+                <v-text-field
+                  label="Phone Number"
+                  name="register"
+                  prepend-icon="mdi-phone"
+                  type="text"
+                  v-model="formData.phoneNumber"
+                ></v-text-field>
+              </v-col>
+            </v-row>
           </v-card-text>
+          <v-card-actions>
+            <v-spacer> </v-spacer>
+            <v-btn
+              color="success"
+              class="btn button"
+              :loading="saving"
+              @click="saveUserData()"
+            >
+              Save
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -47,21 +83,26 @@
     props: {
       source: String,
     },
-    data: () => ({}),
-    watch: {
-      currentUser: function (oldPI, newPI) {
-        if (this.categories != null) {
-          this.setGridData();
-        }
-      },
+    data: () => ({
+      formData: {},
+      emailRules: [
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+/.test(v) || "E-mail must be valid",
+      ],
+      saving: false,
+    }),
+    watch: {},
+    mounted() {
+      this.formData = {
+        email: this.currentUser.details.email,
+        phoneNumber: this.currentUser.details.phoneNumber,
+      };
     },
-    mounted() {},
     methods: {
-      saveCategory() {
-        this.saveCategoryLoading = true;
-        this.$store.dispatch("saveCategory", this.viewFormData).then((result) => {
-          this.saveCategoryLoading = false;
-          this.editMode = false;
+      saveUserData() {
+        this.saving = true;
+        this.$store.dispatch("saveUser", this.formData).then((result) => {
+          this.saving = false;
           if (result.Result == "Success") {
             this.$swal({
               title: "Success!",
